@@ -1,7 +1,7 @@
 @extends('app')
 
 @section('body')
-    <div class="bg-white max-w-2xl mx-auto shadow sm:rounded-sm p-4">
+    <div class="bg-white w-full mx-auto shadow sm:rounded-sm p-4">
         <file-uploader
             upload-action="{{ route('product.store_image', $product->id) }}"
             remove-action="{{ route('product.destroy_image', $product->id) }}"
@@ -19,10 +19,10 @@
                     </div>
                     <div class="mt-4 flex md:mt-0 md:ml-4">
                         <button
-                          type="button"
-                          class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-sm text-white bg-gray-600 hover:bg-gray-500 focus:outline-none focus:shadow-outline-gray focus:border-gray-700 active:bg-gray-700 transition duration-150 ease-in-out"
-                          :class="{ 'opacity-50': processing }"
-                          @click="trigger"
+                            type="button"
+                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-sm text-white bg-gray-600 hover:bg-gray-500 focus:outline-none focus:shadow-outline-gray focus:border-gray-700 active:bg-gray-700 transition duration-150 ease-in-out"
+                            :class="{ 'opacity-50': processing }"
+                            @click="trigger"
                         >
                             <span v-if="!processing">Select image</span>
                             <span v-else>Processing</span>
@@ -35,22 +35,43 @@
                     </div>
                     <div>
                         <div v-if="hasFiles">
-                            <div v-for="file in files" :key="file.id" class="mb-2 pb-2 border-b border-solid border-gray-300">
-                                <img :src="file.url" :alt="file.name" class="mb-2">
-                                <div class="grid grid-cols-4 gap-2 mb-2">
-                                    <div v-for="(variant, key) in file.variants" :key="key">
-                                        <a :href="variant.url" target="_blank">
-                                            <img :src="variant.url" :alt="file.name">
-                                        </a>
+                            <div class="grid grid-cols-4 gap-2 mb-2">
+                                <div v-for="file in files" :key="file.id">
+                                    <img :src="file.url" :alt="file.name" class="mb-2">
+                                    <div class="grid grid-cols-4 gap-2 mb-2">
+                                        <div class="bg-gray-300">
+                                            <a :href="file.variants.sm.url" target="_blank">
+                                                <span class="block text-center py-2">sm</span>
+                                                <img :src="file.variants.sm.url" :alt="file.name">
+                                            </a>
+                                        </div>
+                                        <div class="bg-gray-300">
+                                            <a :href="file.variants.md.url" target="_blank">
+                                                <span class="block text-center py-2">md</span>
+                                                <img :src="file.variants.md.url" :alt="file.name">
+                                            </a>
+                                        </div>
+                                        <div class="bg-gray-300">
+                                            <a :href="file.variants.lg.url" target="_blank">
+                                                <span class="block text-center py-2">lg</span>
+                                                <img :src="file.variants.lg.url" :alt="file.name">
+                                            </a>
+                                        </div>
+                                        <div class="bg-gray-300">
+                                            <a :href="file.variants.xl.url" target="_blank">
+                                                <span class="block text-center py-2">xl</span>
+                                                <img :src="file.variants.xl.url" :alt="file.name">
+                                            </a>
+                                        </div>
                                     </div>
+                                    <button
+                                        type="button"
+                                        class="block w-full items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-sm text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:shadow-outline-red focus:border-red-700 active:bg-red-700 transition duration-150 ease-in-out"
+                                        @click="remove(file.id)"
+                                    >
+                                        Remove image
+                                    </button>
                                 </div>
-                                <button
-                                    type="button"
-                                    class="block w-full items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-sm text-white bg-red-600 hover:bg-red-500 focus:outline-none focus:shadow-outline-red focus:border-red-700 active:bg-red-700 transition duration-150 ease-in-out"
-                                    @click="remove(file.id)"
-                                >
-                                    Remove image
-                                </button>
                             </div>
                         </div>
                         <div
