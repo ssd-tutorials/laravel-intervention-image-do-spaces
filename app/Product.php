@@ -2,6 +2,9 @@
 
 namespace App;
 
+use App\Assets\HasAssets;
+use App\Assets\AssetableContract;
+
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -14,8 +17,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
-class Product extends Model
+class Product extends Model implements AssetableContract
 {
+    use HasAssets;
+
     /**
      * The attributes that are mass assignable.
      *
