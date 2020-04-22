@@ -28,7 +28,7 @@ trait AssetTrait
             return $variant['url'];
         }, $asset->variants));
 
-        return array_values($urls);
+        return array_unique(array_values($urls));
     }
 
     /**

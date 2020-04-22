@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use App\Services\ProductService;
 use App\Services\FileUploadService;
+use App\Http\Resources\AssetResource;
 use App\Http\Requests\Product\UploadImageRequest;
 
-use App\Services\ProductService;
 use Illuminate\Http\JsonResponse;
 
 class ProductImageController extends Controller
@@ -42,11 +43,11 @@ class ProductImageController extends Controller
      */
     public function store(UploadImageRequest $request, Product $product)
     {
-        $this->productService->saveImage(
+        $asset = $this->productService->saveImage(
             $product, $this->fileUploadService->upload($request) // todo add closure processor
         );
 
-        return '';
+        return new AssetResource($asset);
     }
 
     /**

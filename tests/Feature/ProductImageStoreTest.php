@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Asset;
 use App\Product;
-use Illuminate\Contracts\Filesystem\Filesystem;
 use Tests\TestCase;
 use App\Assets\Type\Image;
 use Tests\Traits\AssetTrait;
@@ -12,6 +11,7 @@ use Tests\Traits\ResponseTrait;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ProductImageStoreTest extends TestCase
