@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use App\Http\Resources\AssetCollection;
 
 use Illuminate\View\View;
-use Illuminate\Support\Collection;
 
 class ProductController extends Controller
 {
@@ -30,6 +30,6 @@ class ProductController extends Controller
     {
         return view('product.product')
             ->with('product', $product)
-            ->with('assets', new Collection);
+            ->with('assets', AssetCollection::make($product->assets)->collection);
     }
 }

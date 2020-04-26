@@ -9,9 +9,16 @@ use App\Http\Resources\AssetResource;
 use App\Http\Requests\Product\UploadImageRequest;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\UploadedFile;
+use Intervention\Image\ImageManager;
 
 class ProductImageController extends Controller
 {
+    /**
+     * @var \Intervention\Image\ImageManager
+     */
+    private ImageManager $manager;
+
     /**
      * @var \App\Services\ProductService
      */
@@ -25,11 +32,13 @@ class ProductImageController extends Controller
     /**
      * ProductImageController constructor.
      *
+     * @param  \Intervention\Image\ImageManager  $manager
      * @param  \App\Services\ProductService  $productService
      * @param  \App\Services\FileUploadService  $fileUploadService
      */
-    public function __construct(ProductService $productService, FileUploadService $fileUploadService)
+    public function __construct(ImageManager $manager, ProductService $productService, FileUploadService $fileUploadService)
     {
+        $this->manager = $manager;
         $this->productService = $productService;
         $this->fileUploadService = $fileUploadService;
     }
@@ -44,7 +53,12 @@ class ProductImageController extends Controller
     public function store(UploadImageRequest $request, Product $product)
     {
         $asset = $this->productService->saveImage(
-            $product, $this->fileUploadService->upload($request) // todo add closure processor
+            $product, $this->fileUploadService->upload($request, function (UploadedFile $file) {
+                if ($file->getClientMimeType() === 'image/svg+xml') {
+                    return $file;
+                }
+                return $this->manager->make($file)->greyscale()->save()->basePath();
+            })
         );
 
         return new AssetResource($asset);

@@ -5,12 +5,28 @@ namespace App\Repositories\Eloquent;
 use App\Asset;
 use App\Assets\UploadedAsset;
 use App\Assets\AssetableContract;
+use App\Processors\Image\ImageVariantProcessor;
 use App\Repositories\Contracts\AssetRepositoryContract;
 
 use Closure;
 
 class AssetRepository implements AssetRepositoryContract
 {
+    /**
+     * @var \App\Processors\Image\ImageVariantProcessor
+     */
+    private ImageVariantProcessor $processor;
+
+    /**
+     * AssetRepository constructor.
+     *
+     * @param  \App\Processors\Image\ImageVariantProcessor  $processor
+     */
+    public function __construct(ImageVariantProcessor $processor)
+    {
+        $this->processor = $processor;
+    }
+
     /**
      * @inheritDoc
      */
@@ -32,7 +48,9 @@ class AssetRepository implements AssetRepositoryContract
             'mime' => $file->mime,
             'size' => $file->size,
             'caption' => $file->originalName,
-            'variants' => [], // todo implement processor generating variants
+            'variants' => $file->isImage ?
+                $this->processor->generateVariants($file, $variants, $process) :
+                [],
         ]);
     }
 
