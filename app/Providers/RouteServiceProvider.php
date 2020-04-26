@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Product;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
@@ -30,9 +31,13 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
-
         parent::boot();
+
+        Route::pattern('product', '[0-9]+');
+
+        Route::bind('product', function (int $product) {
+            return Product::with('assets')->findOrFail($product);
+        });
     }
 
     /**

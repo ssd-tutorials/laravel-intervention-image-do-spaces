@@ -23,6 +23,11 @@ class ProductImageStoreTest extends TestCase
      */
     protected Product $product;
 
+    /**
+     * Set up.
+     *
+     * @return void
+     */
     protected function setUp(): void
     {
         parent::setUp();

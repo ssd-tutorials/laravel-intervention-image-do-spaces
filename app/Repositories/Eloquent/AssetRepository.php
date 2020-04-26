@@ -9,6 +9,9 @@ use App\Processors\Image\ImageVariantProcessor;
 use App\Repositories\Contracts\AssetRepositoryContract;
 
 use Closure;
+use InvalidArgumentException;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 class AssetRepository implements AssetRepositoryContract
 {
@@ -69,6 +72,29 @@ class AssetRepository implements AssetRepositoryContract
      */
     public function remove($assets): void
     {
-        // TODO: Implement remove() method.
+        if ($assets instanceof Collection) {
+            $assets->each([$this, 'removeSingleFile']);
+            Asset::whereIn('id', $assets->pluck('id'))->delete();
+        } elseif ($assets instanceof Asset) {
+            $this->removeSingleFile($assets);
+            $assets->delete();
+        } else {
+            throw new InvalidArgumentException;
+        }
+    }
+
+    /**
+     * Remove asset.
+     *
+     * @param  \App\Asset  $asset
+     * @return void
+     */
+    public function removeSingleFile(Asset $asset): void
+    {
+        Storage::disk($asset->disk)->delete($asset->path);
+
+        collect($asset->variants)->each(function (array $variant) use ($asset) {
+            Storage::disk($asset->disk)->delete($variant['path']);
+        });
     }
 }

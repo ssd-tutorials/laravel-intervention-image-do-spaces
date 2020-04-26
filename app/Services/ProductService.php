@@ -55,4 +55,15 @@ class ProductService
             })
         ]);
     }
+
+    /**
+     * Remove product image.
+     *
+     * @param  int  $id
+     * @return void
+     */
+    public function removeImage(int $id): void
+    {
+        $this->assetRepository->remove(Asset::find($id));
+    }
 }

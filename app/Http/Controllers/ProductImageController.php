@@ -6,6 +6,7 @@ use App\Product;
 use App\Services\ProductService;
 use App\Services\FileUploadService;
 use App\Http\Resources\AssetResource;
+use App\Http\Requests\Product\RemoveImageRequest;
 use App\Http\Requests\Product\UploadImageRequest;
 
 use Illuminate\Http\JsonResponse;
@@ -67,10 +68,13 @@ class ProductImageController extends Controller
     /**
      * Remove image.
      *
+     * @param  \App\Http\Requests\Product\RemoveImageRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(): JsonResponse
+    public function destroy(RemoveImageRequest $request): JsonResponse
     {
+        $this->productService->removeImage($request->file);
+
         return new JsonResponse(['success' => true]);
     }
 }
